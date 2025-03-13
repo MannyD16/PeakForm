@@ -1,47 +1,55 @@
 import SwiftUI
 
 struct HomeView: View {
-    var body: some View { //  Now correctly conforms to View
+    var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
-                Text("Welcome to Gym Motivation")
-                    .font(.title)
-                    .fontWeight(.bold)
-
-                NavigationLink(destination: WorkoutTrackingView()) {
-                    Text("Start Workout")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
+            ZStack {
+                Color.black.edgesIgnoringSafeArea(.all) //  Black background
                 
-                NavigationLink(destination: ProgressViewScreen()) {
-                    Text("View Progress")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.green)
+                VStack(spacing: 20) {
+                    Text("Welcome to Gym Motivation")
+                        .font(.title)
+                        .fontWeight(.bold)
                         .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
+                        .shadow(radius: 10) //  Glow effect
+                    
+                    NavigationLink(destination: WorkoutTrackingView()) {
+                        Text("Start Workout")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green) //  Use neon green or red here
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                            .shadow(color: .green, radius: 10) //  Glow effect
+                    }
+                    
+                    NavigationLink(destination: ProgressViewScreen()) {
+                        Text("View Progress")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                            .shadow(color: .blue, radius: 10)
+                    }
 
-                NavigationLink(destination: LeaderboardView()) {
-                    Text("Leaderboard")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.orange)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    NavigationLink(destination: LeaderboardView()) {
+                        Text("Leaderboard")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.orange)
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                            .shadow(color: .orange, radius: 10)
+                    }
                 }
+                .padding()
+                .navigationTitle("Gym Motivation")
             }
-            .padding()
-            .navigationTitle("Gym Motivation")
         }
     }
 }
 
-//  Add a preview to prevent Xcode errors
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
