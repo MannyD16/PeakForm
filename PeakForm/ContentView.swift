@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        SplashScreenView() //  This should match your splash screen file
+        SplashScreenView() // Loads the Splash Screen first
     }
 }
 

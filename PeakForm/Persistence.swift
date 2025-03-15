@@ -1,33 +1,7 @@
-//
-//  Persistence.swift
-//  PeakForm
-//
-//  Created by Manuel Diaz on 3/4/25.
-//
-
 import CoreData
 
 struct PersistenceController {
     static let shared = PersistenceController()
-
-    @MainActor
-    static let preview: PersistenceController = {
-        let result = PersistenceController(inMemory: true)
-        let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-        }
-        do {
-            try viewContext.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-        return result
-    }()
 
     let container: NSPersistentContainer
 
@@ -36,22 +10,43 @@ struct PersistenceController {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores { (storeDescription, error) in
             if let error = error as NSError? {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-
-                /*
-                 Typical reasons for an error here include:
-                 * The parent directory does not exist, cannot be created, or disallows writing.
-                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                 * The device is out of space.
-                 * The store could not be migrated to the current model version.
-                 Check the error message to determine what the actual problem was.
-                 */
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
-        })
+        }
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
+    
+    // Function to save a workout session
+    func saveWorkout(date: Date, duration: Int, calories: Int, exercise: String) {
+        let context = container.viewContext
+        let newWorkout = WorkoutSession(context: context)
+        newWorkout.id = UUID()
+        newWorkout.date = date
+        newWorkout.duration = Int64(duration)
+        newWorkout.caloriesBurned = Int64(calories)
+        newWorkout.exerciseType = exercise
+
+        do {
+            try context.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+    
+    // Function to fetch workout sessions
+    func fetchWorkouts() -> [WorkoutSession] {
+        let context = container.viewContext
+        let fetchRequest: NSFetchRequest<WorkoutSession> = WorkoutSession.fetchRequest()
+        
+        do {
+            return try context.fetch(fetchRequest)
+        } catch {
+            print("Error fetching workouts: \(error)")
+            return []
+        }
+    }
 }
+

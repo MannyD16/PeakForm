@@ -1,11 +1,5 @@
-//
-//  PeakFormApp.swift
-//  PeakForm
-//
-//  Created by Manuel Diaz on 3/4/25.
-//
-
 import SwiftUI
+import CoreData
 
 @main
 struct PeakFormApp: App {
