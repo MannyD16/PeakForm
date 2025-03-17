@@ -15,12 +15,13 @@ struct WorkoutLogView: View {
     @State private var showAlert = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 Text("Log Your Workout")
                     .font(.title)
                     .fontWeight(.bold)
-                    .padding()
+                    .transition(.opacity)
+                    .animation(.easeIn(duration: 0.3), value: true)
 
                 TextField("Exercise Type (e.g., Running, Lifting)", text: $exerciseType)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -44,6 +45,9 @@ struct WorkoutLogView: View {
                         .frame(maxWidth: .infinity)
                         .background(Color.green)
                         .cornerRadius(10)
+                        .shadow(color: .green, radius: 10) // Added glow effect
+                        .scaleEffect(showAlert ? 1.1 : 1.0) // Animation on press
+                        .animation(.easeInOut(duration: 0.2), value: showAlert)
                 }
                 .padding()
                 .alert(isPresented: $showAlert) {
@@ -53,6 +57,7 @@ struct WorkoutLogView: View {
                 Spacer()
             }
             .padding()
+            .background(Color.black.edgesIgnoringSafeArea(.all)) // Dark background
             .navigationTitle("Log Workout")
         }
     }

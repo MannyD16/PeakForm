@@ -6,7 +6,7 @@ struct SplashScreenView: View {
 
     var body: some View {
         if isActive {
-            HomeView() // Navigates to HomeView after the splash screen
+            MainNavigationView() // Navigates to Main Navigation View after the splash screen
         } else {
             VStack {
                 Image(systemName: "flame.fill") // Replace with your logo
@@ -14,16 +14,29 @@ struct SplashScreenView: View {
                     .scaledToFit()
                     .frame(width: 150, height: 150)
                     .foregroundColor(.blue)
+                    .shadow(color: .blue, radius: 10) // Glow effect
+                    .scaleEffect(isActive ? 1.2 : 1.0)
+                    .animation(.easeInOut(duration: 1.0), value: isActive)
 
                 Text("Peak Form") // Updated app name
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
+                    .shadow(color: .white, radius: 10) // Glow effect
 
-                Text("Calories Burned Today: \(caloriesBurned, specifier: "%.0f") kcal")
-                    .font(.subheadline)
-                    .foregroundColor(.white)
-                    .padding(.top, 10)
+                if caloriesBurned == 0 {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .green))
+                        .scaleEffect(1.5)
+                        .padding(.top, 10)
+                } else {
+                    Text("Calories Burned Today: \(caloriesBurned, specifier: "%.0f") kcal")
+                        .font(.subheadline)
+                        .foregroundColor(.white)
+                        .padding(.top, 10)
+                        .transition(.scale)
+                        .animation(.easeOut(duration: 0.5), value: caloriesBurned)
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.black)

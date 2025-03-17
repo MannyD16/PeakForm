@@ -1,61 +1,76 @@
 import SwiftUI
 
 struct HomeView: View {
+    @State private var peakPoints: Int = 1200 // Placeholder value
+    @State private var workoutStreak: Int = 7 // Placeholder value
+
     var body: some View {
         NavigationView {
             ZStack {
                 Color.black.edgesIgnoringSafeArea(.all) // Black background
-
+                
                 VStack(spacing: 20) {
-                    Text("Welcome to Peak Form") // Updated app name
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .shadow(radius: 10) // Glow effect
+                    // PeakPoints and Streak Tracking
+                    VStack {
+                        Text("PeakPoints: \(peakPoints)")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.green)
+                            .shadow(color: .green, radius: 5)
+                        
+                        Text("Workout Streak: \(workoutStreak) Days")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                    }
+                    .padding()
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(10)
 
-                    NavigationLink(destination: WorkoutTrackingView()) {
-                        Text("Start Workout")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.green)
-                            .foregroundColor(.black)
-                            .cornerRadius(10)
-                            .shadow(color: .green, radius: 10) // Glow effect
+                    // Quick Actions
+                    HStack(spacing: 20) {
+                        NavigationLink(destination: WorkoutView()) {
+                            DashboardButton(title: "Start Workout", icon: "dumbbell.fill", color: .blue)
+                        }
+                        
+                        NavigationLink(destination: RankView()) {
+                            DashboardButton(title: "Leaderboard", icon: "chart.bar.fill", color: .purple)
+                        }
                     }
 
-                    NavigationLink(destination: ProgressViewScreen()) {
-                        Text("View Progress")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.black)
-                            .cornerRadius(10)
-                            .shadow(color: .blue, radius: 10)
+                    HStack(spacing: 20) {
+                        NavigationLink(destination: RewardsView()) {
+                            DashboardButton(title: "Claim Rewards", icon: "gift.fill", color: .orange)
+                        }
                     }
-
-                    NavigationLink(destination: LeaderboardView()) {
-                        Text("Leaderboard")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.orange)
-                            .foregroundColor(.black)
-                            .cornerRadius(10)
-                            .shadow(color: .orange, radius: 10)
-                    }
-
-                    NavigationLink(destination: WorkoutLogView()) {
-                        Text("Log a Workout") // New Workout Log button
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.purple)
-                            .foregroundColor(.black)
-                            .cornerRadius(10)
-                            .shadow(color: .purple, radius: 10) // Glow effect
-                    }
+                    Spacer()
                 }
                 .padding()
-                .navigationTitle("Peak Form") // Updated title
+                .navigationTitle("Dashboard")
             }
+        }
+    }
+}
+
+struct DashboardButton: View {
+    let title: String
+    let icon: String
+    let color: Color
+    
+    var body: some View {
+        VStack {
+            Image(systemName: icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 50, height: 50)
+                .foregroundColor(.white)
+                .padding()
+                .background(color)
+                .clipShape(Circle())
+                .shadow(color: color, radius: 5)
+            
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.white)
         }
     }
 }
