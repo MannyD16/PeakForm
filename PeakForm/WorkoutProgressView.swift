@@ -31,6 +31,16 @@ struct WorkoutProgressView: View {
         }
     }
     
+    var averageCaloriesBurned: Int {
+        let totalCalories = filteredWorkouts.reduce(0) { $0 + Int($1.caloriesBurned) }
+        return filteredWorkouts.isEmpty ? 0 : totalCalories / filteredWorkouts.count
+    }
+    
+    var averagePowerLevel: Int {
+        let totalPower = filteredWorkouts.reduce(0) { $0 + Int($1.powerLevel) }
+        return filteredWorkouts.isEmpty ? 0 : totalPower / filteredWorkouts.count
+    }
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -84,6 +94,24 @@ struct WorkoutProgressView: View {
                             }
                         }
                         .frame(height: 200)
+                        .padding()
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(10)
+                        
+                        // Detailed Stats Section
+                        VStack(spacing: 10) {
+                            Text("Detailed Stats")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding(.top)
+                            
+                            Text("Average Calories Burned: \(averageCaloriesBurned) kcal")
+                                .foregroundColor(.green)
+                            
+                            Text("Average Power Level: \(averagePowerLevel)")
+                                .foregroundColor(.blue)
+                        }
                         .padding()
                         .background(Color.gray.opacity(0.2))
                         .cornerRadius(10)
