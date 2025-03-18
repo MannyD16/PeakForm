@@ -22,7 +22,6 @@ struct AvatarView: View {
     @State private var newUsername = ""
     @State private var selectedGearSlot: String = ""
     @State private var showWeaponSelection = false
-    @State private var weaponAnimationTrigger = false
     
     var body: some View {
         ZStack {
@@ -73,22 +72,6 @@ struct AvatarView: View {
                 }
                 .padding()
                 
-                // Weapon Preview with Glow Animation
-                if let weapon = selectedGear["Weapons"], !weapon.isEmpty {
-                    Text("Equipped Weapon: \(weapon)")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.green)
-                        .padding()
-                        .background(Color.gray.opacity(0.3))
-                        .cornerRadius(10)
-                        .shadow(color: weaponAnimationTrigger ? .green : .clear, radius: 10)
-                        .animation(.easeInOut(duration: 0.5), value: weaponAnimationTrigger)
-                        .onAppear {
-                            weaponAnimationTrigger.toggle()
-                        }
-                }
-                
                 // Character Avatar & Gear Slots
                 VStack {
                     Image(systemName: "person.fill")
@@ -125,13 +108,80 @@ struct AvatarView: View {
             .onAppear(perform: loadProfile)
         }
         .sheet(isPresented: $showWeaponSelection) {
-            WeaponSelectionView(selectedGear: $selectedGear, saveAction: {
-                saveProfile()
-                weaponAnimationTrigger.toggle()
-            })
+            WeaponSelectionView(selectedGear: $selectedGear, saveAction: saveProfile)
         }
         .sheet(isPresented: $showGearSelection) {
             GearSelectionView(selectedGear: $selectedGear, selectedSlot: $selectedGearSlot, saveAction: saveProfile)
         }
+    }
+    
+    private func saveProfile() {
+        let profile = profiles.first ?? PlayerProfile(context: viewContext)
+        profile.username = username
+        profile.powerLevel = Int64(powerLevel)
+        profile.damage = Int64(damage)
+        profile.characterClass = characterClass
+        profile.weapon = selectedGear["Weapons"]
+        profile.headwear = selectedGear["Headwear"]
+        profile.pants = selectedGear["Pants"]
+        profile.shoes = selectedGear["Shoes"]
+        
+        updateStats()
+        
+        do {
+            try viewContext.save()
+        } catch {
+            print("Failed to save profile: \(error)")
+        }
+    }
+    
+    private func updateStats() {
+        let gearEffects: [String: (power: Int, damage: Int)] = [
+            "Basic Sword": (power: 20, damage: 15),
+            "Iron Helmet": (power: 10, damage: 5),
+            "Combat Boots": (power: 5, damage: 5),
+            "Battle Pants": (power: 10, damage: 7)
+        ]
+        
+        powerLevel = 100 // Base power level
+        damage = 80 // Base damage
+        
+        for (_, gear) in selectedGear {
+            if let effect = gearEffects[gear] {
+                powerLevel += effect.power
+                damage += effect.damage
+            }
+        }
+        
+        characterClass = determineClass(powerLevel)
+    }
+}
+
+// Weapon Selection View
+struct WeaponSelectionView: View {
+    @Binding var selectedGear: [String: String]
+    let saveAction: () -> Void
+    let weaponOptions = ["Basic Sword", "Battle Axe", "Longbow", "Magic Staff"]
+    
+    var body: some View {
+        VStack {
+            Text("Choose Your Weapon")
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding()
+            
+            List(weaponOptions, id: \ .self) { weapon in
+                Button(weapon) {
+                    selectedGear["Weapons"] = weapon
+                    saveAction()
+                }
+                .padding()
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(10)
+                .foregroundColor(.white)
+            }
+        }
+        .padding()
+        .background(Color.black.edgesIgnoringSafeArea(.all))
     }
 }
