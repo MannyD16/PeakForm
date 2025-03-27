@@ -13,7 +13,7 @@ struct PeakFormApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SplashScreenView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
