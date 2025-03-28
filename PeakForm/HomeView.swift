@@ -69,6 +69,16 @@ struct HomeView: View {
                             .cornerRadius(10)
                             .shadow(color: .red, radius: 10)
                     }
+                    
+                    NavigationLink(destination: ProfileView()) {
+                        Text("Profile")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                            .shadow(color: .gray, radius: 10)
+                    }
                 }
                 .padding()
                 .navigationTitle("Dashboard")
