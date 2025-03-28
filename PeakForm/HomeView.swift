@@ -60,7 +60,7 @@ struct HomeView: View {
                             .shadow(color: .orange, radius: 10)
                     }
 
-                    NavigationLink(destination: Text("Avatar View Coming Soon")) {
+                    NavigationLink(destination: AvatarView()) {
                         Text("Avatar")
                             .frame(maxWidth: .infinity)
                             .padding()
