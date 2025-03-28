@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct HomeView: View {
     var body: some View {
@@ -19,7 +20,7 @@ struct HomeView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.white)
 
-                    NavigationLink(destination: Text("Workout Tracking Coming Soon")) {
+                    NavigationLink(destination: WorkoutLogView()) {
                         Text("Start Workout")
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -29,7 +30,7 @@ struct HomeView: View {
                             .shadow(color: .green, radius: 10)
                     }
 
-                    NavigationLink(destination: Text("Progress View Coming Soon")) {
+                    NavigationLink(destination: WorkoutProgressView()) {
                         Text("View Progress")
                             .frame(maxWidth: .infinity)
                             .padding()
