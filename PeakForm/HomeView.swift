@@ -40,7 +40,7 @@ struct HomeView: View {
                             .shadow(color: .blue, radius: 10)
                     }
 
-                    NavigationLink(destination: Text("Leaderboard Coming Soon")) {
+                    NavigationLink(destination: LeaderboardView()) {
                         Text("Leaderboard")
                             .frame(maxWidth: .infinity)
                             .padding()
